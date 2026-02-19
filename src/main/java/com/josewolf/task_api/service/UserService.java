@@ -4,7 +4,6 @@ import com.josewolf.task_api.dto.requestdto.UserRequestDTO;
 import com.josewolf.task_api.dto.responsedto.UserResponseDTO;
 import com.josewolf.task_api.model.User;
 import com.josewolf.task_api.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

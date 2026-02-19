@@ -2,8 +2,6 @@ package com.josewolf.task_api.controller;
 
 import com.josewolf.task_api.dto.requestdto.TaskRequestDTO;
 import com.josewolf.task_api.dto.responsedto.TaskResponseDTO;
-import com.josewolf.task_api.model.Task;
-import com.josewolf.task_api.repository.UserRepository;
 import com.josewolf.task_api.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

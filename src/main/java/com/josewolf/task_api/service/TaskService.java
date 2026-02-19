@@ -8,15 +8,8 @@ import com.josewolf.task_api.model.TaskStatus;
 import com.josewolf.task_api.model.User;
 import com.josewolf.task_api.repository.TaskRepository;
 import com.josewolf.task_api.repository.UserRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class TaskService {
