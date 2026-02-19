@@ -122,4 +122,13 @@ public class TaskService {
                 updatedTask.getUser() != null ? updatedTask.getUser().getId() : null
         );
     }
+
+    public void deleteTask(Long taskId) {
+        Task task =  taskRepository.findById(taskId).orElseThrow(() ->
+                new ResourceNotFoundException("Task inexistente com o Id: " + taskId));
+
+        taskRepository.delete(task);
+
+    }
+
 }

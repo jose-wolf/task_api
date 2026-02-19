@@ -49,4 +49,11 @@ public class TaskController {
     public ResponseEntity<TaskResponseDTO> updateTaskStatus(@PathVariable Long id, @RequestBody TaskStatusRequestDTO statusRequestDTO) {
         return ResponseEntity.ok(taskService.updateStatus(id,statusRequestDTO));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
