@@ -1,5 +1,6 @@
 package com.josewolf.task_api.controller;
 
+import com.josewolf.task_api.dto.TaskStatusRequestDTO;
 import com.josewolf.task_api.dto.requestdto.TaskRequestDTO;
 import com.josewolf.task_api.dto.responsedto.TaskResponseDTO;
 import com.josewolf.task_api.service.TaskService;
@@ -37,5 +38,15 @@ public class TaskController {
     public ResponseEntity<List<TaskResponseDTO>> getTasksByUserId(@PathVariable Long userId) {
         List<TaskResponseDTO> taskResponseDTOS = taskService.listTasksByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(taskResponseDTOS);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id, @RequestBody TaskRequestDTO requestDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, requestDTO));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<TaskResponseDTO> updateTaskStatus(@PathVariable Long id, @RequestBody TaskStatusRequestDTO statusRequestDTO) {
+        return ResponseEntity.ok(taskService.updateStatus(id,statusRequestDTO));
     }
 }

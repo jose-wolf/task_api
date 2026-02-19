@@ -1,5 +1,6 @@
 package com.josewolf.task_api.service;
 
+import com.josewolf.task_api.dto.TaskStatusRequestDTO;
 import com.josewolf.task_api.dto.requestdto.TaskRequestDTO;
 import com.josewolf.task_api.dto.responsedto.TaskResponseDTO;
 import com.josewolf.task_api.exceptions.ResourceNotFoundException;
@@ -9,6 +10,7 @@ import com.josewolf.task_api.model.User;
 import com.josewolf.task_api.repository.TaskRepository;
 import com.josewolf.task_api.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -85,5 +87,39 @@ public class TaskService {
                         task.getTaskStatus(),
                         task.getUser() != null ? task.getUser().getId() : null
                 )).toList();
+    }
+
+    public TaskResponseDTO updateTask(Long taskId, TaskRequestDTO taskRequestDTO) {
+        Task task =  taskRepository.findById(taskId).orElseThrow(() ->
+                new ResourceNotFoundException("Task inexistente com o Id: " + taskId));
+
+        task.setTitle(taskRequestDTO.title());
+        task.setDescription(taskRequestDTO.description());
+
+        Task savedTask = taskRepository.save(task);
+
+        return new TaskResponseDTO(
+                savedTask.getId(),
+                savedTask.getTitle(),
+                savedTask.getDescription(),
+                savedTask.getTaskStatus(),
+                savedTask.getUser() != null ? savedTask.getUser().getId() : null
+        );
+    }
+
+    public TaskResponseDTO updateStatus(Long taskId, TaskStatusRequestDTO statusRequestDTO) {
+        Task task =  taskRepository.findById(taskId).orElseThrow(() ->
+                new ResourceNotFoundException("Task inexistente com o Id: " + taskId));
+
+        task.setTaskStatus(statusRequestDTO.taskStatus());
+        Task updatedTask = taskRepository.save(task);
+
+        return new TaskResponseDTO(
+                updatedTask.getId(),
+                updatedTask.getTitle(),
+                updatedTask.getDescription(),
+                updatedTask.getTaskStatus(),
+                updatedTask.getUser() != null ? updatedTask.getUser().getId() : null
+        );
     }
 }
