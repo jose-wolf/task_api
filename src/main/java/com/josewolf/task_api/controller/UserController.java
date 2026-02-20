@@ -41,4 +41,10 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> getByEmail(@RequestParam String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> patch(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
+        UserResponseDTO response = userService.updateUserById(id, userRequestDTO);
+        return ResponseEntity.ok(response);
+    }
 }

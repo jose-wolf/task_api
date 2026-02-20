@@ -95,4 +95,34 @@ public class UserService {
         );
     }
 
+    public UserResponseDTO updateUserById(Long id, UserRequestDTO userRequestDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com o id: " + id));
+
+        if (userRequestDTO.username() != null && !userRequestDTO.username().isBlank()) {
+            userRepository.findByUsername(userRequestDTO.username())
+                            .ifPresent(existingUserName -> {
+                                if (!existingUserName.getId().equals(id))
+                                    throw new DataIntegrityViolationException("O nome de usuário já está em uso.");
+                            });
+            user.setUsername(userRequestDTO.username());
+        }
+
+        if (userRequestDTO.email() != null && !userRequestDTO.email().isBlank()) {
+            userRepository.findByEmail(userRequestDTO.email())
+                            .ifPresent(existingUserEmail -> {
+                                if(!existingUserEmail.getId().equals(id))
+                                    throw new DataIntegrityViolationException("O email já está em uso.");
+                            });
+            user.setEmail(userRequestDTO.email());
+        }
+
+        User updatedUser = userRepository.save(user);
+        return new UserResponseDTO(
+                updatedUser.getId(),
+                updatedUser.getUsername(),
+                updatedUser.getEmail()
+        );
+    }
+
 }
