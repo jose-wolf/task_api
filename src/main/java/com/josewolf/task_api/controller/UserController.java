@@ -6,10 +6,9 @@ import com.josewolf.task_api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -25,5 +24,21 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) {
         UserResponseDTO userResponseDTO = userService.createUser(userRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> userResponseDTOS = userService.findAllUsers();
+        return ResponseEntity.ok(userResponseDTOS);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<UserResponseDTO> getByUserName(@RequestParam String username) {
+        return ResponseEntity.ok(userService.findByUsername(username));
+    }
+
+    @GetMapping("/search/email")
+    public ResponseEntity<UserResponseDTO> getByEmail(@RequestParam String email) {
+        return ResponseEntity.ok(userService.findByEmail(email));
     }
 }
