@@ -4,6 +4,9 @@ import com.josewolf.task_api.dto.StandardError;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -30,5 +33,14 @@ public class GlobalHandlerException{
         return  ResponseEntity.status(HttpStatus.CONFLICT).body(err);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<StandardError> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        StandardError err = new StandardError(
+                HttpStatus.BAD_REQUEST.value(),
+                "Requisição inválida",
+                "O corpo da requisição está ausente ou possui campos inválidos."
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
 
 }
