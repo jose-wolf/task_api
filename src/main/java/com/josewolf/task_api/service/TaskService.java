@@ -28,7 +28,7 @@ public class TaskService {
     public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
 
         User user = userRepository.findById(taskRequestDTO.userId()).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado"));
+                () -> new ResourceNotFoundException("Usuário não encontrado"));
 
         Task task = new Task();
 
@@ -74,10 +74,6 @@ public class TaskService {
         }
 
         List<Task> tasks = taskRepository.findByUserId(userId);
-
-        if (tasks.isEmpty()) {
-            throw new ResourceNotFoundException("Nenhuma Task encontrada no sistema");
-        }
 
         return tasks.stream()
                 .map(task -> new TaskResponseDTO(

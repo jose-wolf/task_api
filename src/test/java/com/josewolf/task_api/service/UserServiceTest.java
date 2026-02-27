@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +32,7 @@ public class UserServiceTest {
 
     //Create
     @Test
-    @DisplayName("Deve criar um usuário com sucesso")
+    @DisplayName("Deve criar um usuário com sucesso.")
     void createdUser_Success(){
         UserRequestDTO userRequestDTO = new UserRequestDTO("Teste", "teste@gmail.com");
         User user = new User();
@@ -52,7 +53,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção quando o e-mail já está cadastrado")
+    @DisplayName("Deve lançar exceção quando o e-mail já está cadastrado.")
     void createdUser_ThrowsException_WhenEmailAlreadyExists(){
         UserRequestDTO userRequestDTO = new UserRequestDTO("Teste", "teste@gmail.com");
 
@@ -68,7 +69,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção quando o username já está cadastrado")
+    @DisplayName("Deve lançar exceção quando o username já está cadastrado.")
     void createdUser_ThrowsException_WhenUsernameAlreadyExists(){
         UserRequestDTO userRequestDTO = new UserRequestDTO("Teste", "teste@gmail.com");
 
@@ -84,7 +85,7 @@ public class UserServiceTest {
 
     //Update
     @Test
-    @DisplayName("Deve atualizar somente o email com sucesso")
+    @DisplayName("Deve atualizar somente o email com sucesso.")
     void updateUser_EmailSuccess(){
         Long userId = 1L;
         User userActual = new User();
@@ -107,7 +108,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Deve atualizar somente o username com sucesso")
+    @DisplayName("Deve atualizar somente o username com sucesso.")
     void updateUser_UsernameSuccess(){
         Long userId = 1L;
         User userActual = new User();
@@ -130,7 +131,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção quando atualizar e já tiver username existente por outro")
+    @DisplayName("Deve lançar exceção quando atualizar e já tiver username existente por outro.")
     void updateUser_ThrowsException_WhenUsernameExistent() {
         Long userId = 1L;
         Long otherUserId = 2L;
@@ -156,7 +157,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção quando atualizar e já tiver username existente por outro")
+    @DisplayName("Deve lançar exceção quando atualizar e já tiver username existente por outro.")
     void updateUser_ThrowsException_WhenEmailExistent() {
         Long userId = 1L;
         Long otherUserId = 2L;
@@ -199,5 +200,129 @@ public class UserServiceTest {
     }
 
     //list
+    @Test
+    @DisplayName("Deve listar com sucesso todos os usuários.")
+    void findAllUsers_Success() {
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setUsername("teste1");
+        user1.setEmail("teste1@gmail.com");
+
+        User user2 = new User();
+        user2.setId(2L);
+        user2.setUsername("teste2");
+        user2.setEmail("teste2@gmail.com");
+
+        when(userRepository.findAll()).thenReturn(List.of(user1, user2));
+
+        List<UserResponseDTO> userResponseDTOs = userService.findAllUsers();
+
+        assertNotNull(userResponseDTOs);
+        assertEquals(2, userResponseDTOs.size());
+        assertEquals("teste1", userResponseDTOs.get(0).username());
+        assertEquals("teste2", userResponseDTOs.get(1).username());
+        verify(userRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Deve buscar o usuário que possuir o username igual ao inserido.")
+    void findByUsername_Success(){
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setUsername("teste1");
+        user1.setEmail("teste1@gmail.com");
+
+        User user2 = new User();
+        user2.setId(2L);
+        user2.setUsername("teste2");
+        user2.setEmail("teste2@gmail.com");
+
+        when(userRepository.findByUsername("teste2")).thenReturn(Optional.of(user2));
+
+        UserResponseDTO userResponseDTO = userService.findByUsername("teste2");
+
+        assertNotNull(userResponseDTO);
+        assertEquals("teste2", userResponseDTO.username());
+        verify(userRepository, times(1)).findByUsername("teste2");
+    }
+
+    @Test
+    @DisplayName("Deve buscar o usuário que possuir o email igual ao inserido.")
+    void findByEmail_Success(){
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setUsername("teste1");
+        user1.setEmail("teste1@gmail.com");
+
+        User user2 = new User();
+        user2.setId(2L);
+        user2.setUsername("teste2");
+        user2.setEmail("teste2@gmail.com");
+
+        when(userRepository.findByEmail("teste1@gmail.com")).thenReturn(Optional.of(user1));
+
+        UserResponseDTO userResponseDTO = userService.findByEmail("teste1@gmail.com");
+
+        assertNotNull(userResponseDTO);
+        assertEquals("teste1@gmail.com", userResponseDTO.email());
+        verify(userRepository, times(1)).findByEmail("teste1@gmail.com");
+    }
+
+    @Test
+    @DisplayName("Deve lançar excessão se o nome não for encontrado")
+    void findByUsername_ThrowsException_WhenUsernameNotFound() {
+        String usernameTeste = "Teste";
+
+        when(userRepository.findByUsername(usernameTeste)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            userService.findByUsername(usernameTeste);
+        });
+
+        verify(userRepository, times(1)).findByUsername(usernameTeste);
+    }
+
+    @Test
+    @DisplayName("Deve lançar excessão se o email não for encontrado")
+    void findByUsername_ThrowsException_WhenEmailNotFound() {
+        String emailTeste = "teste@gmail.com";
+
+        when(userRepository.findByEmail(emailTeste)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            userService.findByEmail(emailTeste);
+        });
+
+        verify(userRepository, times(1)).findByEmail(emailTeste);
+    }
+
+    @Test
+    @DisplayName("Deve deletar com sucesso")
+    void deleteUser_Success(){
+        Long userId = 1L;
+        User userActual = new User();
+        userActual.setId(userId);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userActual));
+
+        userService.deleteUserById(userId);
+        verify(userRepository, times(1)).delete(userActual);
+    }
+
+    @Test
+    @DisplayName("Deve deletar com sucesso")
+    void deleteUser_ThrowsException_WhenUserIdNotFound() {
+        Long userId = 999L;
+        User userActual = new User();
+        userActual.setId(userId);
+
+        when(userRepository.findById(userActual.getId())).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            userService.deleteUserById(userId);
+        });
+
+        verify(userRepository, never()).delete(userActual);
+    }
 
 }
