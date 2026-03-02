@@ -37,7 +37,7 @@ public class UserController {
     @GetMapping
     @Operation(summary = "Lista todos os usuários", description = "Retorna uma lista de todos os usuários criados")
     @ApiResponse(responseCode = "200", description = "Todos os usuários existentes são listados.")
-    @ApiResponse(responseCode = "404", description = "Não existem usuários para serem listados.")
+    @ApiResponse(responseCode = "200", description = "Retorna uma lista vazia.")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         List<UserResponseDTO> userResponseDTOS = userService.findAllUsers();
         return ResponseEntity.ok(userResponseDTOS);
