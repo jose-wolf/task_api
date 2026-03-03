@@ -29,6 +29,7 @@ public class TaskController {
     @Operation(summary = "Cria uma task", description = "Retorna uma task criada relacionada com o usuário por id.")
     @ApiResponse(responseCode = "201", description = "Cria uma task relacionada com o id do usuário.")
     @ApiResponse(responseCode = "400", description = "O corpo da requisição está ausente ou possui campos inválidos.")
+    @ApiResponse(responseCode = "404", description = "Usuário não existe.")
     public ResponseEntity<TaskResponseDTO> createTask(@RequestBody @Valid TaskRequestDTO requestDTO) {
         TaskResponseDTO taskResponseDTO = taskService.createTask(requestDTO);
 
@@ -38,7 +39,7 @@ public class TaskController {
     @GetMapping
     @Operation(summary = "Lista todas as task", description = "Retorna lista de todas as tasks.")
     @ApiResponse(responseCode = "200", description = "Lista todas as tasks existentes.")
-    @ApiResponse(responseCode = "404", description = "Não existem tasks para serem listadas.")
+    @ApiResponse(responseCode = "200", description = "Retorna uma lista vazia.")
     public ResponseEntity<List<TaskResponseDTO>> getAllTasks() {
         List<TaskResponseDTO> taskResponseDTOS = taskService.listAllTasks();
         return ResponseEntity.status(HttpStatus.OK).body(taskResponseDTOS);
@@ -58,7 +59,7 @@ public class TaskController {
     @ApiResponse(responseCode = "200", description = "Task encontrada pelo id, e atualizada com sucesso.")
     @ApiResponse(responseCode = "400", description = "O corpo da requisição está ausente ou possui campos inválidos.")
     @ApiResponse(responseCode = "404", description = "Não existe task com o id solicitado.")
-    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id, @RequestBody TaskRequestDTO requestDTO) {
+    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id,@Valid @RequestBody TaskRequestDTO requestDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, requestDTO));
     }
 
@@ -67,7 +68,7 @@ public class TaskController {
     @ApiResponse(responseCode = "200", description = "Task encontrada pelo id, e status atualizado com sucesso.")
     @ApiResponse(responseCode = "400", description = "O corpo da requisição está ausente ou possui campos inválidos.")
     @ApiResponse(responseCode = "404", description = "Não existe task com o id solicitado.")
-    public ResponseEntity<TaskResponseDTO> updateTaskStatus(@PathVariable Long id, @RequestBody TaskStatusRequestDTO statusRequestDTO) {
+    public ResponseEntity<TaskResponseDTO> updateTaskStatus(@PathVariable Long id, @Valid @RequestBody TaskStatusRequestDTO statusRequestDTO) {
         return ResponseEntity.ok(taskService.updateStatus(id,statusRequestDTO));
     }
 
