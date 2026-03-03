@@ -49,10 +49,6 @@ public class UserService {
     public List<UserResponseDTO> findAllUsers() {
         List<User> users = userRepository.findAll();
 
-        if(users.isEmpty()) {
-            throw new ResourceNotFoundException("Usuários inexistentes.");
-        }
-
         return users.stream()
                 .map( user -> {
                     return new UserResponseDTO(
