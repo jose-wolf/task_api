@@ -52,10 +52,6 @@ public class TaskService {
 
         List<Task> tasks = taskRepository.findAll();
 
-        if(tasks.isEmpty()) {
-            throw  new ResourceNotFoundException("Nenhuma Task encontrada no sistema");
-        }
-
         return tasks.stream()
                 .map(task -> {
                     return new TaskResponseDTO(
