@@ -39,24 +39,15 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        return new UserResponseDTO(
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getEmail()
-        );
+        return new UserResponseDTO(savedUser);
     }
 
     public List<UserResponseDTO> findAllUsers() {
         List<User> users = userRepository.findAll();
 
         return users.stream()
-                .map( user -> {
-                    return new UserResponseDTO(
-                      user.getId(),
-                      user.getUsername(),
-                      user.getEmail()
-                    );
-                        }).toList();
+                .map(UserResponseDTO::new)
+                .toList();
     }
 
     public UserResponseDTO findByUsername(String username) {
@@ -68,11 +59,7 @@ public class UserService {
 
         User user = userOptional.get();
 
-        return new UserResponseDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail()
-        );
+        return new UserResponseDTO(user);
     }
 
     public UserResponseDTO findByEmail(String email) {
@@ -84,11 +71,7 @@ public class UserService {
 
         User user = userOptional.get();
 
-        return new UserResponseDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail()
-        );
+        return new UserResponseDTO(user);
     }
 
     public UserResponseDTO updateUserById(Long id, UserRequestDTO userRequestDTO) {
@@ -114,11 +97,7 @@ public class UserService {
         }
 
         User updatedUser = userRepository.save(user);
-        return new UserResponseDTO(
-                updatedUser.getId(),
-                updatedUser.getUsername(),
-                updatedUser.getEmail()
-        );
+        return new UserResponseDTO(updatedUser);
     }
 
     public void deleteUserById(Long id) {

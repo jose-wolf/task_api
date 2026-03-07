@@ -1,5 +1,6 @@
 package com.josewolf.task_api.dto.responsedto;
 
+import com.josewolf.task_api.model.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UserResponseDTO(
@@ -10,4 +11,9 @@ public record UserResponseDTO(
         @Schema(description = "Retorna o email escrito pelo usuário.", example = "teste@gmail.com")
         String email
 ) {
+
+        public UserResponseDTO(User user) {
+                this(user.getId(), user.getUsername(), user.getEmail());
+        }
+
 }

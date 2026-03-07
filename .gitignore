@@ -3,6 +3,8 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+*.jar
+*.war
 
 ### STS ###
 .apt_generated
@@ -33,3 +35,10 @@ build/
 .vscode/
 
 src/main/resources/application.properties
+.env
+
+## Docker ##
+dados_postgres/
+*.tar.gz
+backup_completo.sql
+

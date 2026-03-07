@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    container_name: postgres-api
+    environment:
+      - POSTGRES_PASSWORD=sua_senha
+      - POSTGRES_DB=seu_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./dados_postgres:/var/lib/postgresql/data/data
+
+  app:
+    build: .
+    container_name: task-api-container
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/seu_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=sua_senha_aqui
+    depends_on:
+      - db

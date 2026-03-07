@@ -1,5 +1,6 @@
 package com.josewolf.task_api.dto.responsedto;
 
+import com.josewolf.task_api.model.Task;
 import com.josewolf.task_api.model.TaskStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -16,4 +17,13 @@ public record TaskResponseDTO(
     @Schema(description = "Retorna o ID do usuário relacionado com a task.", example = "task = 5, pertence ao usuário = 7")
     Long userId
 
-) { }
+) {
+    public TaskResponseDTO (Task task){
+       this(task.getId(),
+        task.getTitle(),
+        task.getDescription(),
+        task.getTaskStatus(),
+        task.getUser() != null ? task.getUser().getId() : null
+       );
+    }
+}

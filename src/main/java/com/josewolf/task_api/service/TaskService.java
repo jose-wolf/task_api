@@ -39,13 +39,7 @@ public class TaskService {
 
         Task savedTask = taskRepository.save(task);
 
-        return new TaskResponseDTO(
-                savedTask.getId(),
-                savedTask.getTitle(),
-                savedTask.getDescription(),
-                savedTask.getTaskStatus(),
-                savedTask.getUser().getId()
-        );
+        return new TaskResponseDTO(savedTask);
     }
 
     public List<TaskResponseDTO> listAllTasks() {
@@ -53,15 +47,8 @@ public class TaskService {
         List<Task> tasks = taskRepository.findAll();
 
         return tasks.stream()
-                .map(task -> {
-                    return new TaskResponseDTO(
-                            task.getId(),
-                            task.getTitle(),
-                            task.getDescription(),
-                            task.getTaskStatus(),
-                            task.getUser() != null ? task.getUser().getId() : null
-                    );
-                }).toList();
+                .map(TaskResponseDTO::new)
+                .toList();
     }
 
     public List<TaskResponseDTO> listTasksByUserId(Long userId) {
@@ -72,13 +59,8 @@ public class TaskService {
         List<Task> tasks = taskRepository.findByUserId(userId);
 
         return tasks.stream()
-                .map(task -> new TaskResponseDTO(
-                        task.getId(),
-                        task.getTitle(),
-                        task.getDescription(),
-                        task.getTaskStatus(),
-                        task.getUser() != null ? task.getUser().getId() : null
-                )).toList();
+                .map(TaskResponseDTO::new)
+                .toList();
     }
 
     public TaskResponseDTO updateTask(Long taskId, TaskRequestDTO taskRequestDTO) {
@@ -90,13 +72,7 @@ public class TaskService {
 
         Task savedTask = taskRepository.save(task);
 
-        return new TaskResponseDTO(
-                savedTask.getId(),
-                savedTask.getTitle(),
-                savedTask.getDescription(),
-                savedTask.getTaskStatus(),
-                savedTask.getUser() != null ? savedTask.getUser().getId() : null
-        );
+        return new TaskResponseDTO(savedTask);
     }
 
     public TaskResponseDTO updateStatus(Long taskId, TaskStatusRequestDTO statusRequestDTO) {
@@ -106,13 +82,7 @@ public class TaskService {
         task.setTaskStatus(statusRequestDTO.taskStatus());
         Task updatedTask = taskRepository.save(task);
 
-        return new TaskResponseDTO(
-                updatedTask.getId(),
-                updatedTask.getTitle(),
-                updatedTask.getDescription(),
-                updatedTask.getTaskStatus(),
-                updatedTask.getUser() != null ? updatedTask.getUser().getId() : null
-        );
+        return new TaskResponseDTO(updatedTask);
     }
 
     public void deleteTask(Long taskId) {
