@@ -34,8 +34,10 @@ build/
 ### VS Code ###
 .vscode/
 
+## Segurança ##
 src/main/resources/application.properties
 .env
+compose.yaml
 
 ## Docker ##
 dados_postgres/
